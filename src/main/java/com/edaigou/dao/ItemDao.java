@@ -11,7 +11,7 @@ public interface ItemDao {
 	
 	void edit(Long id,String title, String imageByte, Long pNumIid, Long sNumIid,boolean ifsNumIidNull,
 			Double realSalesPrice, Double realSaleDiscount, Double realProfit,
-			Double profitDifference,Double minPrice, Long shopId,Double shopSalePrice);
+			Double profitDifference,Double minPrice, Long shopId,Double shopSalePrice,String pType);
 	
 	void editDetail(Long id,String detail);
 

@@ -51,7 +51,7 @@ public class ItemDaoImpl extends JdbcTemplateBaseDao implements ItemDao {
 	@Override
 	public void edit(Long id, String title, String imageByte, Long pNumIid,
 			Long sNumIid,boolean ifsNumIidNull, Double realSalesPrice, Double realSaleDiscount,
-			Double realProfit, Double profitDifference,Double minPrice, Long shopId,Double shopSalePrice) {
+			Double realProfit, Double profitDifference,Double minPrice, Long shopId,Double shopSalePrice,String pType) {
 		SqlBuilder sqlBuilder = new SqlBuilder(
 				"update Item set gmtModify=current_timestamp()");
 		if (imageByte != null && imageByte.length() > 0) {
@@ -90,6 +90,9 @@ public class ItemDaoImpl extends JdbcTemplateBaseDao implements ItemDao {
 		}
 		if (shopSalePrice != null) {
 			sqlBuilder.set("shopSalePrice", shopSalePrice);
+		}
+		if (pType != null) {
+			sqlBuilder.set("pType", pType);
 		}
 		update(id, sqlBuilder);
 	}

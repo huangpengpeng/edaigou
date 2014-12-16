@@ -83,7 +83,6 @@ public class ItemGetController {
 											new URL(modemMap.get("image")
 													+ "_80x80q90.jpg"))
 											.createImage());
-							itemGroupForm.getsNumIid().setText("");
 							itemGroupForm.getImage().setToolTipText(
 									(String) modemMap.get("image"));
 						} catch (Exception e) {

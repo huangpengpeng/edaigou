@@ -21,6 +21,7 @@ import com.edaigou.entity.ItemErrors;
 import com.edaigou.entity.ItemErrors.ItemErrorsType;
 import com.edaigou.entity.PromotionItem;
 import com.edaigou.entity.Shop;
+import com.edaigou.entity.Item.ItemPType;
 import com.edaigou.entity.Item.ItemStatus;
 import com.edaigou.form.MessageText;
 import com.edaigou.form.widgets.PageForm;
@@ -94,6 +95,10 @@ public class ItemListingJkController {
 								if (itemErrorsMng.getByItemAndType(
 										item.getId(),
 										ItemErrorsType.天猫下架.toString()) != null) {
+									continue;
+								}
+								if (StringUtils.equals(item.getpType(),
+										ItemPType.高级淘宝客.toString())) {
 									continue;
 								}
 

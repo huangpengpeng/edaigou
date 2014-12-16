@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import com.edaigou.entity.Item.ItemPType;
 import com.edaigou.form.MainForm;
 import com.edaigou.resource.ImageUtils;
 
@@ -56,6 +57,7 @@ public class ItemGroupForm {
 	private Text subsidy;
 	private Button image;
 	private Combo comboOfShop;
+	private Combo comboOfPType;
 	private Text sNumIid;
 	private Label lableOfSNumIid;
 
@@ -84,6 +86,7 @@ public class ItemGroupForm {
 			comboOfShop.setText("");
 		image.setImage(SWTResourceManager.getImage(MainForm.class,
 				"/com/edaigou/resource/default.jpg"));
+		getComboOfPType().setText("");
 	}
 
 	public void write(Map map) throws MalformedURLException {
@@ -116,6 +119,7 @@ public class ItemGroupForm {
 				.setText(
 						map.get("sNumIid") == null ? "" : map.get("sNumIid")
 								.toString());
+		getComboOfPType().setText((String)map.get("pType"));
 	}
 
 	public void open() {
@@ -136,12 +140,8 @@ public class ItemGroupForm {
 		buttonOfGetItem.setBounds(1012, 11, 72, 22);
 		buttonOfGetItem.setText("抓取商品");
 
-		Label lblNewLabel_1 = new Label(groupOfItem, SWT.NONE);
-		lblNewLabel_1.setBounds(119, 16, 54, 12);
-		lblNewLabel_1.setText("店铺标题");
-
 		title = new Text(groupOfItem, SWT.BORDER);
-		title.setBounds(284, 13, 264, 18);
+		title.setBounds(365, 13, 184, 18);
 
 		Label label = new Label(groupOfItem, SWT.NONE);
 		label.setBounds(119, 47, 54, 12);
@@ -239,7 +239,13 @@ public class ItemGroupForm {
 		subsidy.setBounds(952, 44, 54, 18);
 
 		comboOfShop = new Combo(groupOfItem, SWT.NONE);
-		comboOfShop.setBounds(175, 13, 103, 20);
+		comboOfShop.setBounds(120, 13, 100, 20);
+
+		comboOfPType = new Combo(groupOfItem, SWT.NONE);
+		comboOfPType.setBounds(245, 13, 100, 20);
+		comboOfPType.add(ItemPType.普通.toString());
+		comboOfPType.add(ItemPType.标题不一致.toString());
+		comboOfPType.add(ItemPType.高级淘宝客.toString());
 
 		buttonOfSaveItem.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -256,11 +262,10 @@ public class ItemGroupForm {
 		});
 
 		image.addListener(SWT.Selection, new Listener() {
-			
 			@Override
 			public void handleEvent(Event arg0) {
 				String urlValue = url.getText();
-				if (StringUtils.isNotBlank(urlValue)){
+				if (StringUtils.isNotBlank(urlValue)) {
 					browser.setUrl(urlValue);
 					tabFolder.setSelection(1);
 				}
@@ -436,4 +441,13 @@ public class ItemGroupForm {
 		this.buttonOfSearchItem = buttonOfSearchItem;
 	}
 
+	public Combo getComboOfPType() {
+		return comboOfPType;
+	}
+
+	public void setComboOfPType(Combo comboOfPType) {
+		this.comboOfPType = comboOfPType;
+	}
+
+	
 }

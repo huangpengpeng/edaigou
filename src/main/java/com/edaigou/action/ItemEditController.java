@@ -39,24 +39,21 @@ public class ItemEditController {
 			try {
 				itemGroupForm.getButtonOfSaveItem().setEnabled(false);
 				String titleValue = itemGroupForm.getTitle().getText();
-				String originalPriceValue = itemGroupForm
-						.getOriginalPrice().getText();
-				String salePriceValue = itemGroupForm.getSalePrice()
+				String originalPriceValue = itemGroupForm.getOriginalPrice()
 						.getText();
-				String commissionRateValue = itemGroupForm
-						.getCommissionRate().getText();
+				String salePriceValue = itemGroupForm.getSalePrice().getText();
+				String commissionRateValue = itemGroupForm.getCommissionRate()
+						.getText();
 				String commissionValue = itemGroupForm.getCommissionMoney()
 						.getText();
 				String subsidyRateValue = itemGroupForm.getSubsidyRate()
 						.getText();
-				String realSalesPriceValue = itemGroupForm
-						.getRealSalesPrice().getText();
-				String shopSalePriceValue = itemGroupForm
-						.getRealSalesPrice().getToolTipText();
+				String realSalesPriceValue = itemGroupForm.getRealSalesPrice()
+						.getText();
+				String shopSalePriceValue = itemGroupForm.getRealSalesPrice()
+						.getToolTipText();
 				String realSaleDiscountValue = itemGroupForm
 						.getRealSaleDiscount().getText();
-				String realProfitValue = itemGroupForm.getRealProfit()
-						.getText();
 				String sumCommissionRateValue = itemGroupForm
 						.getSumCommissionRate().getText();
 				String sumCOmmissionMoneyValue = itemGroupForm
@@ -65,21 +62,22 @@ public class ItemEditController {
 				String imageUrlValue = itemGroupForm.getImage()
 						.getToolTipText();
 				String imageByteValue = ImageUtils
-						.imgToBase64String(itemGroupForm.getImage()
-								.getImage());
+						.imgToBase64String(itemGroupForm.getImage().getImage());
 				String shopName = itemGroupForm.getComboOfShop().getText();
-				String pNumIidValue = itemGroupForm.getUrl()
-						.getToolTipText();
+				String pNumIidValue = itemGroupForm.getUrl().getToolTipText();
 				String sNumIid = itemGroupForm.getsNumIid().getText();
 				Double minPrice = null;
 				if (!StringUtils.isBlank(browserTextOfMinPrice.getText())) {
-					minPrice = Double.valueOf(browserTextOfMinPrice
-							.getText());
+					minPrice = Double.valueOf(browserTextOfMinPrice.getText());
 				}
 				if (shopName == null) {
 					throw new IllegalStateException("请选择店铺");
 				}
 				Shop shop = shopMng.getByNick(shopName);
+				String pType = itemGroupForm.getComboOfPType().getText();
+				if (StringUtils.isBlank(pType)) {
+					throw new IllegalStateException("请选择商品推广类型");
+				}
 				Item item = manager.getByPNumIid(Long.valueOf(pNumIidValue));
 				manager.edit(
 						item.getId(),
@@ -103,7 +101,7 @@ public class ItemEditController {
 								.valueOf(sNumIid),
 						minPrice,
 						shopSalePriceValue == null ? null : Double
-								.valueOf(shopSalePriceValue), null);
+								.valueOf(shopSalePriceValue), null, pType);
 			} catch (Exception e) {
 				MessageText.error(e.getMessage());
 				log.error(e.getMessage(), e);

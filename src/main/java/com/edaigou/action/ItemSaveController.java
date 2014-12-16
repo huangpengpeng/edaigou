@@ -1,5 +1,6 @@
 package com.edaigou.action;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.slf4j.Logger;
@@ -56,8 +57,12 @@ public class ItemSaveController {
 							.getData(
 									itemGroupForm.getComboOfShop()
 											.getSelectionIndex() + "");
+					String pType = itemGroupForm.getComboOfPType().getText();
 					if (shopValue == null) {
 						throw new IllegalStateException("请选择店铺");
+					}
+					if (StringUtils.isBlank(pType)) {
+						throw new IllegalStateException("亲选择推广商品分类");
 					}
 					String pNumIidValue = itemGroupForm.getUrl()
 							.getToolTipText();
@@ -77,7 +82,7 @@ public class ItemSaveController {
 							Double.valueOf(subsidyValue),
 							Double.valueOf(sumCommissionRateValue),
 							Double.valueOf(sumCOmmissionMoneyValue), shopValue,
-							itemGroupForm.getUrl().getText());
+							itemGroupForm.getUrl().getText(), pType);
 
 					itemController.init(1);
 

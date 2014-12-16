@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.edaigou.action.BrowserController;
 import com.edaigou.action.ItemAppController;
+import com.edaigou.action.ItemCommissionRateController;
 import com.edaigou.action.ItemController;
 import com.edaigou.action.ItemDelistingController;
 import com.edaigou.action.ItemDetailController;
@@ -226,6 +227,11 @@ public class MainFromNewInstanceApplicationListener implements
 		kutongItemController.setButtonOfkutongitem((Button)FormUtils.get("buttonOfkutongitem", form));
 		kutongItemController.setPageForm((PageForm)FormUtils.get("pageForm", form));
 		kutongItemController.addActionListenter();
+		
+		
+		ItemCommissionRateController ttemCommissionRateController=applicationContextEvent.getBean(ItemCommissionRateController.class);
+		ttemCommissionRateController.setItemGroupForm((ItemGroupForm)FormUtils.get("itemGroupForm", form));
+		ttemCommissionRateController.addActionListenter();
 		
 		/*******************这段必须放到最后执行  分页显示才不会乱**********************/
 		TabFolderController tabFolderController = applicationContextEvent

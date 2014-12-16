@@ -42,14 +42,14 @@ public interface ItemMng {
 			Double originalPrice, Double salePrice, Double commissionMoney,
 			Double commissionRate, Double subsidyRate, Double subsidy,
 			Double sumCommissionRate, Double sumCOmmissionMoney, Long shopId,
-			String url);
+			String url,String pType);
 
 	void edit(Long id, Long pNumIid, String title, String imageByte,
 			String imageUrl, Double realSalesPrice, Double realSaleDiscount, Double originalPrice, Double salePrice,
 			Double commissionMoney, Double commissionRate, Double subsidyRate,
 			Double subsidy, Double sumCommissionRate,
 			Double sumCOmmissionMoney, Long shopId, String url, Long sNumIid,
-			Double minPrice, Double shopSalePrice, String detail);
+			Double minPrice, Double shopSalePrice, String detail,String pType);
 	
 	void editDetail(Long id, String detail);
 

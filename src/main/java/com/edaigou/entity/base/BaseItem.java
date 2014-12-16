@@ -21,7 +21,7 @@ public class BaseItem extends BaseEntity {
 	}
 
 	public BaseItem(String title, String imageByte, Long pNumIid, Long sNumIid,
-			Double realSalesPrice, Double realSaleDiscount, Double realProfit, Double profitDifference,Long shopId) {
+			Double realSalesPrice, Double realSaleDiscount, Double realProfit, Double profitDifference,Long shopId,String pType) {
 		this.setTitle(title);
 		this.setImageByte(imageByte);
 		this.setpNumIid(pNumIid);
@@ -31,12 +31,20 @@ public class BaseItem extends BaseEntity {
 		this.setRealProfit(realProfit);
 		this.setProfitDifference(profitDifference);
 		this.setShopId(shopId);
+		this.setpType(pType);
 	}
+	
+	
 
 	/**
 	 * 商品标题
 	 */
 	private String title;
+	
+	/**
+	 * 推广商品类型
+	 */
+	private String pType;
 
 	/**
 	 * 商品图片流
@@ -202,5 +210,13 @@ public class BaseItem extends BaseEntity {
 
 	public void setDetail(String detail) {
 		this.detail = detail;
+	}
+
+	public String getpType() {
+		return pType;
+	}
+
+	public void setpType(String pType) {
+		this.pType = pType;
 	}
 }

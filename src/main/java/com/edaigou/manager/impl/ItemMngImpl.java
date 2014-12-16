@@ -29,10 +29,10 @@ public class ItemMngImpl implements ItemMng {
 			Long pNumIid, Double realSalesPrice, Double realSaleDiscount, Double originalPrice, Double salePrice,
 			Double commissionMoney, Double commissionRate, Double subsidyRate,
 			Double subsidy, Double sumCommissionRate,
-			Double sumCOmmissionMoney, Long shopId, String url) {
+			Double sumCOmmissionMoney, Long shopId, String url,String pType) {
 		Item item = new Item(title, imageByte, pNumIid, null, realSalesPrice,
 				realSaleDiscount, getRealProfit(realSalesPrice, sumCOmmissionMoney, salePrice,subsidy), getProfitDifference(salePrice,
-						realSalesPrice), shopId);
+						realSalesPrice), shopId,pType);
 		item.init();
 		long id = dao.add(item);
 		promotionItemMng.add(id, title, imageByte, imageUrl, pNumIid,
@@ -48,7 +48,7 @@ public class ItemMngImpl implements ItemMng {
 			Double commissionRate, Double subsidyRate, Double subsidy,
 			Double sumCommissionRate, Double sumCOmmissionMoney, Long shopId,
 			String url, Long sNumIid, Double minPrice, Double shopSalePrice,
-			String detail) {
+			String detail, String pType) {
 		dao.edit(
 				id,
 				title,
@@ -61,7 +61,7 @@ public class ItemMngImpl implements ItemMng {
 				getRealProfit(realSalesPrice, sumCOmmissionMoney, salePrice,
 						subsidy),
 				getProfitDifference(salePrice, realSalesPrice), minPrice,
-				shopId, shopSalePrice);
+				shopId, shopSalePrice, pType);
 
 		promotionItemMng.edit(id, title, imageByte, imageUrl, null,
 				originalPrice, salePrice, commissionMoney, commissionRate,
@@ -71,7 +71,8 @@ public class ItemMngImpl implements ItemMng {
 		ItemErrors itemErrors = itemErrorsMng.getByItemAndType(id,
 				ItemErrors.ItemErrorsType.低价.toString());
 
-		if (minPrice != null && minPrice.intValue() <= realSalesPrice.intValue()) {
+		if (minPrice != null
+				&& minPrice.intValue() <= realSalesPrice.intValue()) {
 			if (itemErrors == null) {
 				itemErrorsMng.add(id, ItemErrorsType.低价.toString());
 			}

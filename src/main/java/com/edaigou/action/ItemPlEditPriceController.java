@@ -74,7 +74,7 @@ public class ItemPlEditPriceController {
 									promotionItem.getSumCOmmissionMoney(),
 									item.getShopId(), promotionItem.getUrl(),
 									item.getsNumIid(), item.getMinPrice(),
-									item.getShopSalePrice(), item.getDetail());
+									item.getShopSalePrice(), item.getDetail(),item.getpType());
 						}
 					}
 				} catch (Exception e) {
