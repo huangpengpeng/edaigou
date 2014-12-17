@@ -190,7 +190,7 @@ public class ItemListingJkController {
 		this.pageForm = pageForm;
 	}
 
-	private Logger log = LoggerFactory.getLogger(ItemListingController.class);
+	private Logger log = LoggerFactory.getLogger(ItemListingJkController.class);
 
 	@Autowired
 	private ItemMng manager;

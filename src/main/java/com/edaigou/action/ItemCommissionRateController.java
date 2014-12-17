@@ -20,11 +20,10 @@ public class ItemCommissionRateController {
 	private ItemGroupForm itemGroupForm;
 
 	public void addActionListenter() {
-		itemGroupForm.getCommissionRate().addModifyListener(
-				new ModifyListener() {
-
-					@Override
-					public void modifyText(ModifyEvent arg0) {
+		itemGroupForm.getCommissionRate().addListener(SWT.FocusOut, new Listener() {
+			
+			@Override
+			public void handleEvent(Event arg0) {
 						String rPriceValue = itemGroupForm.getSalePrice()
 								.getText();
 						String commissionRateValue = itemGroupForm

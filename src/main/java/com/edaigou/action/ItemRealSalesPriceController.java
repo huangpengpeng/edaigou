@@ -3,8 +3,11 @@ package com.edaigou.action;
 import java.text.DecimalFormat;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.springframework.stereotype.Controller;
 
 import com.edaigou.form.MessageText;
@@ -16,11 +19,10 @@ public class ItemRealSalesPriceController {
 	private ItemGroupForm itemGroupForm;
 
 	public void addActionListenter() {
-		itemGroupForm.getRealSalesPrice().addModifyListener(
-				new ModifyListener() {
-
-					@Override
-					public void modifyText(ModifyEvent arg0) {
+		itemGroupForm.getRealSalesPrice().addListener(SWT.FocusOut, new Listener() {
+			
+			@Override
+			public void handleEvent(Event arg0) {
 						try {
 
 							if (StringUtils.isBlank(itemGroupForm

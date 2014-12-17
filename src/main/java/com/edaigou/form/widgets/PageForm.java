@@ -66,6 +66,7 @@ public class PageForm {
 		comboOfItemErrors.add(ItemErrorsType.淘宝客变动.toString());
 		comboOfItemErrors.add(ItemErrorsType.天猫下架.toString());
 		comboOfItemErrors.add(ItemErrorsType.重复编号.toString());
+		comboOfItemErrors.add(ItemErrorsType.标题错误.toString());
 		
 		comboOfsearchShop = new Combo(composite, SWT.NONE);
 		comboOfsearchShop.setBounds(625, 9, 81, 20);
