@@ -17,12 +17,12 @@ import org.springframework.stereotype.Controller;
 
 import com.common.util.NumberUtils;
 import com.edaigou.entity.Item;
+import com.edaigou.entity.Item.ItemPType;
+import com.edaigou.entity.Item.ItemStatus;
 import com.edaigou.entity.ItemErrors;
 import com.edaigou.entity.ItemErrors.ItemErrorsType;
 import com.edaigou.entity.PromotionItem;
 import com.edaigou.entity.Shop;
-import com.edaigou.entity.Item.ItemPType;
-import com.edaigou.entity.Item.ItemStatus;
 import com.edaigou.form.MessageText;
 import com.edaigou.form.widgets.PageForm;
 import com.edaigou.manager.ItemErrorsMng;
@@ -30,8 +30,6 @@ import com.edaigou.manager.ItemMng;
 import com.edaigou.manager.PromotionItemMng;
 import com.edaigou.manager.ShopMng;
 import com.edaigou.service.TaobaoItemSvc;
-import com.taobao.biz.manager.TaoBaoItemSkuMng;
-import com.taobao.biz.manager.impl.TaoBaoItemSkuMngImpl;
 
 @Controller
 public class ItemListingJkController {
@@ -53,6 +51,64 @@ public class ItemListingJkController {
 						.getText();
 				final Shop shop = shopMng.getByNick(nick);
 				new Thread(new Runnable() {
+
+					protected void jktitle(Item item,
+							Map<String, Object> modemMap,
+							PromotionItem promotionItem) {
+						if (itemErrorsMng.getByItemAndType(item.getId(),
+								ItemErrorsType.标题错误.toString()) != null) {
+							return;
+						}
+						if (StringUtils.equals(item.getpType(),
+								ItemPType.标题不一致.toString())) {
+							return;
+						}
+						if (!StringUtils.equals(item.getTitle(),
+								(String) modemMap.get("title"))) {
+							itemErrorsMng.add(item.getId(),
+									ItemErrorsType.标题错误.toString());
+						}
+					}
+
+					public void jktk(Item item, Map<String, Object> modemMap,
+							PromotionItem promotionItem) {
+						if (itemErrorsMng.getByItemAndType(item.getId(),
+								ItemErrorsType.淘宝客变动.toString()) != null) {
+							return;
+						}
+						if (itemErrorsMng.getByItemAndType(item.getId(),
+								ItemErrorsType.天猫下架.toString()) != null) {
+							return;
+						}
+						if (StringUtils.equals(item.getpType(),
+								ItemPType.高级淘宝客.toString())) {
+							return;
+						}
+
+						try {
+
+							Double cRate = (Double) modemMap
+									.get("commissionRate");
+							if (cRate == null) {
+								itemErrorsMng.add(item.getId(),
+										ItemErrorsType.淘宝客变动.toString());
+								return;
+							}
+							if (!NumberUtils.equals(cRate,
+									promotionItem.getCommissionRate())) {
+								itemErrorsMng.add(item.getId(),
+										ItemErrorsType.淘宝客变动.toString());
+								return;
+							}
+						} catch (IllegalStateException e) {
+							if ("此商品没有淘客".equals(e.getMessage())) {
+								itemErrorsMng.add(item.getId(),
+										ItemErrorsType.天猫下架.toString());
+							}
+						}
+
+					}
+
 					@Override
 					public void run() {
 						Display.getDefault().syncExec(new Runnable() {
@@ -87,49 +143,17 @@ public class ItemListingJkController {
 
 								Item item = items.get(i);
 
-								if (itemErrorsMng.getByItemAndType(
-										item.getId(),
-										ItemErrorsType.淘宝客变动.toString()) != null) {
-									continue;
-								}
-								if (itemErrorsMng.getByItemAndType(
-										item.getId(),
-										ItemErrorsType.天猫下架.toString()) != null) {
-									continue;
-								}
-								if (StringUtils.equals(item.getpType(),
-										ItemPType.高级淘宝客.toString())) {
-									continue;
-								}
-
 								PromotionItem promotionItem = promotionItemMng
 										.get(item.getId());
 								if (items.size() > 1) {
-									Thread.sleep(2000);
+									Thread.sleep(1000);
 								}
-								try {
-									Map<String, Object> modemMap = taobaoItemSvc
-											.getAitaobaoItem(promotionItem
-													.getUrl());
-									Double cRate = (Double) modemMap
-											.get("commissionRate");
-									if (cRate == null) {
-										itemErrorsMng.add(item.getId(),
-												ItemErrorsType.淘宝客变动.toString());
-										continue;
-									}
-									if (!NumberUtils.equals(cRate,
-											promotionItem.getCommissionRate())) {
-										itemErrorsMng.add(item.getId(),
-												ItemErrorsType.淘宝客变动.toString());
-										continue;
-									}
-								} catch (IllegalStateException e) {
-									if ("此商品没有淘客".equals(e.getMessage())) {
-										itemErrorsMng.add(item.getId(),
-												ItemErrorsType.天猫下架.toString());
-									}
-								}
+								Map<String, Object> modemMap = taobaoItemSvc
+										.getAitaobaoItem(promotionItem.getUrl());
+
+								jktk(item, modemMap, promotionItem);
+
+								jktitle(item, modemMap, promotionItem);
 
 							} catch (final Exception e) {
 								if (items.size() == 1) {
@@ -165,12 +189,9 @@ public class ItemListingJkController {
 	public void setPageForm(PageForm pageForm) {
 		this.pageForm = pageForm;
 	}
-	
-	
 
-	private Logger log = LoggerFactory.getLogger(ItemListingController.class);
+	private Logger log = LoggerFactory.getLogger(ItemListingJkController.class);
 
-	
 	@Autowired
 	private ItemMng manager;
 	@Autowired

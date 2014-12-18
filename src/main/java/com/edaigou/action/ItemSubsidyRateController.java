@@ -3,8 +3,11 @@ package com.edaigou.action;
 import java.text.DecimalFormat;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.springframework.stereotype.Controller;
 
 import com.edaigou.form.MessageText;
@@ -22,10 +25,9 @@ public class ItemSubsidyRateController {
 	private ItemGroupForm itemGroupForm;
 
 	public void addActionListenter() {
-		itemGroupForm.getSubsidyRate().addModifyListener(new ModifyListener() {
-
+		itemGroupForm.getSubsidyRate().addListener(SWT.FocusOut, new Listener() {
 			@Override
-			public void modifyText(ModifyEvent arg0) {
+			public void handleEvent(Event arg0) {
 				try {
 					if (StringUtils.isBlank(itemGroupForm.getSalePrice()
 							.getText())) {
@@ -64,8 +66,10 @@ public class ItemSubsidyRateController {
 
 					Double rsPrice = Double.valueOf(itemGroupForm
 							.getRealSalesPrice().getText());
+					
 					Double rProfit = (rsPrice + (c + sdy) - (c + sdy) * 0.1 - (sdy * 0.2))
 							- sPrice;
+					
 					itemGroupForm.getRealProfit().setText(
 							new DecimalFormat("#").format(rProfit));
 				} catch (Exception e) {
