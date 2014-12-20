@@ -85,7 +85,6 @@ public class ItemListingJkController {
 							return;
 						}
 
-						try {
 
 							Double cRate = (Double) modemMap
 									.get("commissionRate");
@@ -100,13 +99,7 @@ public class ItemListingJkController {
 										ItemErrorsType.淘宝客变动.toString());
 								return;
 							}
-						} catch (IllegalStateException e) {
-							if ("此商品没有淘客".equals(e.getMessage())) {
-								itemErrorsMng.add(item.getId(),
-										ItemErrorsType.天猫下架.toString());
-							}
-						}
-
+					
 					}
 
 					@Override
@@ -148,8 +141,18 @@ public class ItemListingJkController {
 								if (items.size() > 1) {
 									Thread.sleep(1000);
 								}
-								Map<String, Object> modemMap = taobaoItemSvc
-										.getAitaobaoItem(promotionItem.getUrl());
+								Map<String, Object> modemMap = null;
+								try {
+									modemMap = taobaoItemSvc
+											.getAitaobaoItem(promotionItem
+													.getUrl());
+								} catch (IllegalStateException e) {
+									if ("此商品没有淘客".equals(e.getMessage())) {
+										itemErrorsMng.add(item.getId(),
+												ItemErrorsType.天猫下架.toString());
+									}
+									continue;
+								}
 
 								jktk(item, modemMap, promotionItem);
 

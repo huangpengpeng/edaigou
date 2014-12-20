@@ -64,7 +64,7 @@ public class ItemListingController {
 		}
 		page = manager.getPageOfMap(ids, getComboOfsearchShop(), pageForm
 				.getSearchText().getText(), ItemStatus.上架.toString(), pageNo,
-				10,false);
+				10, false);
 		pageForm.showPage(page);
 
 		table(page.getList(Map.class));

@@ -331,7 +331,7 @@ public class BrowserController {
 					}
 				}
 				try {
-					Thread.sleep(8000);
+					Thread.sleep(5000);
 				} catch (InterruptedException e) {
 				}
 				Display.getDefault().syncExec(new Runnable() {
