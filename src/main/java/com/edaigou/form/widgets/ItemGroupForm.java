@@ -86,7 +86,6 @@ public class ItemGroupForm {
 			comboOfShop.setText("");
 		image.setImage(SWTResourceManager.getImage(MainForm.class,
 				"/com/edaigou/resource/default.jpg"));
-		
 	}
 
 	public void write(Map map) throws MalformedURLException {

@@ -326,12 +326,12 @@ public class BrowserController {
 									.toString());
 					Double realSalesPrice = Double.valueOf(map.get(
 							"realSalesPrice").toString());
-					if (shopSalePrice.equals(realSalesPrice)) {
-						continue;
-					}
+//					if (shopSalePrice.equals(realSalesPrice)) {
+//						continue;
+//					}
 				}
 				try {
-					Thread.sleep(8000);
+					Thread.sleep(5000);
 				} catch (InterruptedException e) {
 				}
 				Display.getDefault().syncExec(new Runnable() {
