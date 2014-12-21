@@ -24,7 +24,7 @@ import com.edaigou.form.widgets.ItemGroupForm;
 import com.edaigou.form.widgets.PageForm;
 
 @Component
-public class MainForm {
+public class MainForm { 
 
 	protected Shell shell;
 	private Group groupOfItem;
@@ -83,6 +83,9 @@ public class MainForm {
 	private Text textOfnick;
 	private Button buttonOfappcurl;
 	private Button buttonOfkutongitem;
+	private 		CTabItem tabItemOfTitleError;
+	private Composite compositeOfTitleError;
+	private Table tableOfTitleErrors;
 
 	/**
 	 * Launch the application.
@@ -255,6 +258,8 @@ public class MainForm {
 		browserComboOfItemErrors.add(ItemErrorsType.淘宝客变动.toString());
 		browserComboOfItemErrors.add(ItemErrorsType.天猫下架.toString());
 		browserComboOfItemErrors.add(ItemErrorsType.重复编号.toString());
+		browserComboOfItemErrors.add(ItemErrorsType.标题错误.toString());
+		browserComboOfItemErrors.add(ItemErrorsType.SKU变动.toString());
 
 		ctabItemOfFilters = new CTabItem(tabFolder, SWT.NONE);
 		ctabItemOfFilters.setText("商品过滤");
@@ -362,6 +367,28 @@ public class MainForm {
 		buttonOfappcurl.setBounds(998, 3, 80, 27);
 		buttonOfappcurl.setText("抓取");
 		
+		 tabItemOfTitleError = new CTabItem(tabFolder, SWT.NONE);
+		tabItemOfTitleError.setText("标题错误");
+		
+		 compositeOfTitleError = new Composite(tabFolder, SWT.NONE);
+		tabItemOfTitleError.setControl(compositeOfTitleError);
+		
+		tableOfTitleErrors = new Table(compositeOfTitleError, SWT.BORDER | SWT.FULL_SELECTION);
+		tableOfTitleErrors.setBounds(0, 0, 1088, 540);
+		tableOfTitleErrors.setHeaderVisible(true);
+		tableOfTitleErrors.setLinesVisible(true);
+		
+		tabItemOfSkuErrors = new CTabItem(tabFolder, SWT.NONE);
+		tabItemOfSkuErrors.setText("SKU错误");
+		
+		compositeOfSkuErrors = new Composite(tabFolder, SWT.NONE);
+		tabItemOfSkuErrors.setControl(compositeOfSkuErrors);
+		
+		tableOfSkuErrors = new Table(compositeOfSkuErrors, SWT.BORDER | SWT.FULL_SELECTION);
+		tableOfSkuErrors.setBounds(0, 0, 1088, 540);
+		tableOfSkuErrors.setHeaderVisible(true);
+		tableOfSkuErrors.setLinesVisible(true);
+		
 		itemGroupForm.open();
 
 		ApplicationContextUtils.publishEvent();
@@ -387,4 +414,7 @@ public class MainForm {
 
 	private final static org.slf4j.Logger LOG = LoggerFactory
 			.getLogger(MainForm.class);
+	private CTabItem tabItemOfSkuErrors;
+	private Composite compositeOfSkuErrors;
+	private Table tableOfSkuErrors;
 }

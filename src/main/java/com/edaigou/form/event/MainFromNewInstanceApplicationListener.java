@@ -27,7 +27,9 @@ import com.edaigou.action.ItemListingJkController;
 import com.edaigou.action.ItemPlEditPriceController;
 import com.edaigou.action.ItemRealSalesPriceController;
 import com.edaigou.action.ItemSaveController;
+import com.edaigou.action.ItemSkuErrorsController;
 import com.edaigou.action.ItemSubsidyRateController;
+import com.edaigou.action.ItemTitleErrorsController;
 import com.edaigou.action.KutongItemController;
 import com.edaigou.action.ShopController;
 import com.edaigou.action.TabFolderController;
@@ -232,6 +234,18 @@ public class MainFromNewInstanceApplicationListener implements
 		ItemCommissionRateController ttemCommissionRateController=applicationContextEvent.getBean(ItemCommissionRateController.class);
 		ttemCommissionRateController.setItemGroupForm((ItemGroupForm)FormUtils.get("itemGroupForm", form));
 		ttemCommissionRateController.addActionListenter();
+		
+		ItemTitleErrorsController titleErrorsController=applicationContextEvent.getBean(ItemTitleErrorsController.class);
+		titleErrorsController.setItemGroupForm((ItemGroupForm)FormUtils.get("itemGroupForm", form));
+		titleErrorsController.setTableOfTitleErrors((Table)FormUtils.get("tableOfTitleErrors", form));
+		titleErrorsController.init(null);
+		titleErrorsController.addActionListener();
+		
+		ItemSkuErrorsController itemSkuErrorsController=applicationContextEvent.getBean(ItemSkuErrorsController.class);
+		itemSkuErrorsController.setItemGroupForm((ItemGroupForm)FormUtils.get("itemGroupForm", form));
+		itemSkuErrorsController.setTableOfSkuErrors((Table)FormUtils.get("tableOfSkuErrors", form));
+		itemSkuErrorsController.init(null);
+		itemSkuErrorsController.addActionListener();
 		
 		/*******************这段必须放到最后执行  分页显示才不会乱**********************/
 		TabFolderController tabFolderController = applicationContextEvent

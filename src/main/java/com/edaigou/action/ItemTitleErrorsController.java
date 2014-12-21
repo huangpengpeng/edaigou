@@ -12,7 +12,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -25,9 +24,9 @@ import com.common.jdbc.page.Pagination;
 import com.edaigou.entity.Appliance;
 import com.edaigou.entity.Item.ItemStatus;
 import com.edaigou.entity.ItemErrors;
+import com.edaigou.entity.ItemErrors.ItemErrorsType;
 import com.edaigou.form.MessageText;
 import com.edaigou.form.widgets.ItemGroupForm;
-import com.edaigou.form.widgets.PageForm;
 import com.edaigou.form.widgets.TableUtils;
 import com.edaigou.manager.ApplianceMng;
 import com.edaigou.manager.ItemErrorsMng;
@@ -36,64 +35,57 @@ import com.edaigou.manager.PromotionItemMng;
 import com.edaigou.manager.ShopMng;
 import com.edaigou.resource.ImageUtils;
 import com.edaigou.service.TaobaoItemSvc;
+import com.taobao.api.domain.Item;
 import com.taobao.biz.manager.impl.TaobaoItemMngImpl;
 
-/**
- * 上架商品处理控制器
- * 
- * @author zoro
- *
- */
 @Controller
-public class ItemListingController {
+public class ItemTitleErrorsController {
 
-	private Table tableOfListing;
-	private PageForm pageForm;
+	private Table tableOfTitleErrors;
 	private ItemGroupForm itemGroupForm;
 
 	public Pagination page;
 
 	public void init(Integer pageNo) {
 		Long[] ids = ArrayUtils.EMPTY_LONG_OBJECT_ARRAY;
-		List<ItemErrors> errors = itemErrorsMng.getByErrorType(pageForm
-				.getComboOfItemErrors().getText());
+		List<ItemErrors> errors = itemErrorsMng
+				.getByErrorType(ItemErrorsType.标题错误.toString());
 		for (ItemErrors itemErrors : errors) {
 			ids = (Long[]) ArrayUtils.add(ids, itemErrors.getItemId());
 		}
-		if (!StringUtils.isBlank(pageForm.getComboOfItemErrors().getText())) {
-			ids = (Long[]) ArrayUtils.add(ids, 0L);
+		if(ArrayUtils.isEmpty(ids)){
+			ids = (Long[]) ArrayUtils.add(ids,0L);
 		}
-		page = manager.getPageOfMap(ids, getComboOfsearchShop(), pageForm
-				.getSearchText().getText(), ItemStatus.上架.toString(), pageNo,
-				10, false);
-		pageForm.showPage(page);
+		page = manager.getPageOfMap(ids, null, null, ItemStatus.上架.toString(),
+				pageNo, 100, false);
 
 		table(page.getList(Map.class));
 	}
 
 	public void table(List<Map> list) {
 
-		TableUtils.removeAll(tableOfListing);
+		TableUtils.removeAll(tableOfTitleErrors);
 
-		TableUtils.addColumn(tableOfListing, "商品图片", 90);
-		TableUtils.addColumn(tableOfListing, "掌柜名称", 90);
-		TableUtils.addColumn(tableOfListing, "商品标题", 190);
-		TableUtils.addColumn(tableOfListing, "原始标价", 60);
-		TableUtils.addColumn(tableOfListing, "原售价格", 60);
-		TableUtils.addColumn(tableOfListing, "实售价格", 60);
-		TableUtils.addColumn(tableOfListing, "提成总额", 60);
-		TableUtils.addColumn(tableOfListing, "实际折扣", 60);
-		TableUtils.addColumn(tableOfListing, "实际利润", 60);
-		TableUtils.addColumn(tableOfListing, "状态", 60);
-		TableUtils.addColumn(tableOfListing, "低格", 60);
-		TableUtils.addColumn(tableOfListing, "差额", 60);
-		TableUtils.addColumn(tableOfListing, "编号", 70);
-		TableUtils.addColumn(tableOfListing, "操作", 90);
+		TableUtils.addColumn(tableOfTitleErrors, "商品图片", 90);
+		TableUtils.addColumn(tableOfTitleErrors, "掌柜名称", 90);
+		TableUtils.addColumn(tableOfTitleErrors, "商品标题", 190);
+		TableUtils.addColumn(tableOfTitleErrors, "原始标价", 60);
+		TableUtils.addColumn(tableOfTitleErrors, "原售价格", 60);
+		TableUtils.addColumn(tableOfTitleErrors, "实售价格", 60);
+		TableUtils.addColumn(tableOfTitleErrors, "提成总额", 60);
+		TableUtils.addColumn(tableOfTitleErrors, "实际折扣", 60);
+		TableUtils.addColumn(tableOfTitleErrors, "实际利润", 60);
+		TableUtils.addColumn(tableOfTitleErrors, "状态", 60);
+		TableUtils.addColumn(tableOfTitleErrors, "低格", 60);
+		TableUtils.addColumn(tableOfTitleErrors, "差额", 60);
+		TableUtils.addColumn(tableOfTitleErrors, "编号", 70);
+		TableUtils.addColumn(tableOfTitleErrors, "操作", 90);
 
 		for (Map<String, Object> map : list) {
 			try {
 
-				TableItem tableItem = new TableItem(tableOfListing, SWT.NONE);
+				TableItem tableItem = new TableItem(tableOfTitleErrors,
+						SWT.NONE);
 				TableUtils.addItemOfImage(tableItem, ImageUtils
 						.base64StringToImg((String) map.get("imageByte")), 80,
 						0);
@@ -144,7 +136,8 @@ public class ItemListingController {
 
 				tableItem.setData(map);
 
-				Button delistingButton = new Button(tableOfListing, SWT.NONE);
+				Button delistingButton = new Button(tableOfTitleErrors,
+						SWT.NONE);
 				delistingButton.setData(map);
 				delistingButton.addListener(SWT.Selection, new Listener() {
 					@Override
@@ -155,24 +148,27 @@ public class ItemListingController {
 							Appliance appliance = applianceMng
 									.getByNickOfOne(map.get("nick").toString());
 
-							try{
-							new TaobaoItemMngImpl().delisting(
-									appliance.getAppKey(),
-									appliance.getAppSecret(),
-									(Long) map.get("sNumIid"),
-									appliance.getSessionKey());
-							}catch(Exception e){
-								MessageBox messageBox = new MessageBox(tableOfListing
-										.getShell(), SWT.OK | SWT.CANCEL);
-								messageBox.setMessage("淘宝店铺商品下架错误，Msg:"+e.getMessage()+" 是否还执行系统下架？");
-								if (messageBox.open() != SWT.OK) {
-									return;
-								}
+							Long pNumIid = (Long) map.get("pNumIid");
+							Long sNUmIid = (Long) map.get("sNumIid");
+
+							try {
+								Item item = new TaobaoItemMngImpl()
+										.get(pNumIid);
+
+								new TaobaoItemMngImpl().updateDesc(
+										appliance.getAppKey(),
+										appliance.getAppSecret(), sNUmIid,
+										item.getTitle(), null,
+										appliance.getSessionKey());
+							} catch (Exception e) {
+								MessageText.error(e.getMessage());
+								return;
 							}
 
-							manager.edit((Long) map.get("id"),
-									ItemStatus.下架.toString());
-
+							ItemErrors itemErrors = itemErrorsMng
+									.getByItemAndType((Long) map.get("id"),
+											ItemErrorsType.标题错误.toString());
+							itemErrorsMng.delete(itemErrors.getId());
 							init(page.getPageNo());
 						} catch (Exception e) {
 							MessageText.error(e.getMessage());
@@ -180,7 +176,7 @@ public class ItemListingController {
 						}
 					}
 				});
-				delistingButton.setText("下架");
+				delistingButton.setText("修复");
 
 				TableUtils.addButton(tableItem, 13, delistingButton, SWT.None,
 						90);
@@ -192,37 +188,7 @@ public class ItemListingController {
 
 	public void addActionListener() {
 
-		pageForm.addUpListener(PageForm.LiSTING_ITEM, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				init(page.getPrePage());
-			}
-		});
-
-		pageForm.addNextListener(PageForm.LiSTING_ITEM, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				init(page.getNextPage());
-			}
-		});
-
-		pageForm.getButtonOfRef().addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				if (pageForm.getTabFolder().getSelectionIndex() == 3) {
-					init(page == null ? 1 : page.getPageNo());
-				}
-			}
-		});
-
-		pageForm.addSearchListener(PageForm.LiSTING_ITEM, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				init(1);
-			}
-		});
-
-		tableOfListing.addSelectionListener(new SelectionListener() {
+		tableOfTitleErrors.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				Map map = (Map) arg0.item.getData();
@@ -245,41 +211,6 @@ public class ItemListingController {
 		});
 	}
 
-	private Long getComboOfsearchShop() {
-		Object value = pageForm.getComboOfsearchShop().getData(
-				pageForm.getComboOfsearchShop().getSelectionIndex() + "");
-		if (value != null) {
-			return Long.valueOf(value.toString());
-		}
-		return null;
-	}
-
-	public void setTableOfListing(Table tableOfListing) {
-		this.tableOfListing = tableOfListing;
-	}
-
-	public void setPageForm(PageForm pageForm) {
-		this.pageForm = pageForm;
-	}
-
-	public void setPage(Pagination page) {
-		this.page = page;
-	}
-
-	public void setItemErrorsMng(ItemErrorsMng itemErrorsMng) {
-		this.itemErrorsMng = itemErrorsMng;
-	}
-
-	public void setManager(ItemMng manager) {
-		this.manager = manager;
-	}
-
-	public void setItemGroupForm(ItemGroupForm itemGroupForm) {
-		this.itemGroupForm = itemGroupForm;
-	}
-
-	private Logger log = LoggerFactory.getLogger(ItemListingController.class);
-
 	@Autowired
 	private ApplianceMng applianceMng;
 	@Autowired
@@ -292,4 +223,15 @@ public class ItemListingController {
 	private ItemErrorsMng itemErrorsMng;
 	@Autowired
 	private ItemMng manager;
+
+	private Logger log = LoggerFactory.getLogger(ItemListingController.class);
+
+	public void setItemGroupForm(ItemGroupForm itemGroupForm) {
+		this.itemGroupForm = itemGroupForm;
+	}
+
+	public void setTableOfTitleErrors(Table tableOfTitleErrors) {
+		this.tableOfTitleErrors = tableOfTitleErrors;
+	}
+
 }

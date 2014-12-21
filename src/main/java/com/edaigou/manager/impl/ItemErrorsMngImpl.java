@@ -12,13 +12,15 @@ import com.edaigou.manager.ItemErrorsMng;
 
 @Transactional
 @Service
-public class ItemErrorsMngImpl implements ItemErrorsMng{
+public class ItemErrorsMngImpl implements ItemErrorsMng {
 
 	@Override
 	public void add(Long itemId, String errorType) {
-		ItemErrors itemErrors=new ItemErrors(itemId, errorType);
-		itemErrors.init();
-		dao.add(itemErrors);
+		if (dao.getByItemAndType(itemId, errorType) == null) {
+			ItemErrors itemErrors = new ItemErrors(itemId, errorType);
+			itemErrors.init();
+			dao.add(itemErrors);
+		}
 	}
 
 	@Override
@@ -26,23 +28,21 @@ public class ItemErrorsMngImpl implements ItemErrorsMng{
 		return dao.getByItemAndType(itemId, errorType);
 	}
 
-
 	@Override
 	public List<ItemErrors> getByErrorType(String errorType) {
 		return dao.getByErrorType(errorType);
 	}
-	
-	
+
 	@Override
 	public void delete(Long id) {
 		dao.delete(id);
 	}
-	
+
 	@Override
 	public List<ItemErrors> getByItem(Long itemId) {
 		return dao.getByItem(itemId);
 	}
-	
+
 	@Autowired
 	private ItemErrorsDao dao;
 }
