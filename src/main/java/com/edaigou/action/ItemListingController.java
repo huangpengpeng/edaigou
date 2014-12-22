@@ -181,9 +181,21 @@ public class ItemListingController {
 					}
 				});
 				delistingButton.setText("下架");
+				Button upButton = new Button(tableOfListing, SWT.NONE);
+				upButton.setData(map);
+				upButton.setText("创建");
+				upButton.addListener(SWT.Selection, new Listener() {
+					@Override
+					public void handleEvent(Event arg0) {
+						Map map = (Map) arg0.widget.getData();
+						manager.edit((Long) map.get("id"),
+								ItemStatus.创建.toString());
+						init(page.getPageNo());
+					}
+				});
 
-				TableUtils.addButton(tableItem, 13, delistingButton, SWT.None,
-						90);
+				TableUtils.addButton(tableItem, 13, delistingButton, SWT.LEFT, 45);
+				TableUtils.addButton(tableItem, 13, upButton, SWT.RIGHT, 45);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
