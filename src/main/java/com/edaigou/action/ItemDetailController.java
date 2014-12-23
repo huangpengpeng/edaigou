@@ -6,11 +6,9 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,9 +67,9 @@ public class ItemDetailController {
 						}
 						List<Item> items = manager.query(ids, title,
 								shop.getId(), ItemStatus.创建.toString());
-						for (int i = 0; i < items.size(); i++) {
-							Item item = items.get(i);
-							try {
+						try {
+							for (int i = 0; i < items.size(); i++) {
+								Item item = items.get(i);
 								if (StringUtils.isNotBlank(item.getDetail())) {
 									continue;
 								}
@@ -110,19 +108,15 @@ public class ItemDetailController {
 									manager.editDetail(item.getId(),
 											buffer.toString());
 								}
-							} catch (final Exception e) {
-								if (items.size() == 1) {
-									Display.getDefault().syncExec(
-											new Runnable() {
-												@Override
-												public void run() {
-													MessageText.error(e
-															.getMessage());
-												}
-											});
-								}
-								log.error(e.getMessage(), e);
 							}
+						} catch (final Exception e) {
+							Display.getDefault().syncExec(new Runnable() {
+								@Override
+								public void run() {
+									MessageText.error(e.getMessage());
+								}
+							});
+							log.error(e.getMessage(), e);
 						}
 						Display.getDefault().syncExec(new Runnable() {
 							@Override

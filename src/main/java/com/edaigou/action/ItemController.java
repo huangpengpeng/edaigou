@@ -28,12 +28,14 @@ import org.springframework.stereotype.Controller;
 import com.common.jdbc.page.Pagination;
 import com.edaigou.entity.Item;
 import com.edaigou.entity.Item.ItemStatus;
+import com.edaigou.entity.Appliance;
 import com.edaigou.entity.ItemErrors;
 import com.edaigou.entity.PromotionItem;
 import com.edaigou.form.MessageText;
 import com.edaigou.form.widgets.ItemGroupForm;
 import com.edaigou.form.widgets.PageForm;
 import com.edaigou.form.widgets.TableUtils;
+import com.edaigou.manager.ApplianceMng;
 import com.edaigou.manager.ItemErrorsMng;
 import com.edaigou.manager.ItemMng;
 import com.edaigou.manager.PromotionItemMng;
@@ -41,6 +43,7 @@ import com.edaigou.manager.ShopMng;
 import com.edaigou.resource.ImageUtils;
 import com.edaigou.resource.ResourceUtils;
 import com.edaigou.service.TaobaoItemSvc;
+import com.taobao.biz.manager.impl.TaobaoItemMngImpl;
 
 @Controller
 public class ItemController {
@@ -169,6 +172,22 @@ public class ItemController {
 					@Override
 					public void handleEvent(Event arg0) {
 						Map map = (Map) arg0.widget.getData();
+						if (map.get("sNumIid") != null
+								|| StringUtils.isNotBlank(map.get("sNumIid")
+										.toString())) {
+							try{
+							Appliance appliance = applianceMng
+									.getByNickOfOne(map.get("nick").toString());
+							new TaobaoItemMngImpl().delisting(
+									appliance.getAppKey(),
+									appliance.getAppSecret(),
+									Long.valueOf(map.get("sNumIid").toString()),
+									appliance.getSessionKey());
+							}catch(Exception e){
+								MessageText.error(e.getMessage());
+								return;
+							}
+						}
 						manager.delete((Long) map.get("id"));
 						init(page.getPageNo());
 					}
@@ -338,6 +357,8 @@ public class ItemController {
 		this.checkboxOfItemExists = checkboxOfItemExists;
 	}
 
+	@Autowired
+	private ApplianceMng applianceMng;
 	@Autowired
 	private ItemErrorsMng itemErrorsMng;
 	@Autowired

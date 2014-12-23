@@ -1,9 +1,7 @@
 package com.edaigou.action;
 
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -16,14 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.common.util.JxPathUtils;
-import com.common.util.NumberUtils;
 import com.edaigou.entity.Appliance;
 import com.edaigou.entity.Item;
-import com.edaigou.entity.ItemErrors;
-import com.edaigou.entity.PromotionItem;
-import com.edaigou.entity.Shop;
 import com.edaigou.entity.Item.ItemStatus;
-import com.edaigou.entity.ItemErrors.ItemErrorsType;
+import com.edaigou.entity.ItemErrors;
+import com.edaigou.entity.Shop;
 import com.edaigou.form.MessageText;
 import com.edaigou.form.widgets.PageForm;
 import com.edaigou.manager.ApplianceMng;
@@ -63,8 +58,8 @@ public class KutongItemController {
 						
 						final List<Item> items = manager.query(null, title,
 								shop.getId(), ItemStatus.上架.toString());
-						for (int i = 0; i < items.size(); i++) {
-							try {
+						try {
+							for (int i = 0; i < items.size(); i++) {
 								final int j = i;
 								Display.getDefault().syncExec(new Runnable() {
 									@Override
@@ -102,7 +97,7 @@ public class KutongItemController {
 										continue;
 									}
 									if (items.size() > 1) {
-										Thread.sleep(500);
+										Thread.sleep(200);
 									}
 
 									taoBaoItemSkuMng.updateBySkuQuantity(
@@ -114,19 +109,16 @@ public class KutongItemController {
 
 											appliance.getSessionKey());
 								}
-							} catch (final Exception e) {
-								if (items.size() == 1) {
-									Display.getDefault().syncExec(
-											new Runnable() {
+							}
+						} catch (final Exception e) {
+								Display.getDefault().syncExec(
+										new Runnable() {
 												@Override
 												public void run() {
-													MessageText.error(e
-															.getMessage());
+													MessageText.error(e.getMessage());
 												}
-											});
-								}
-								log.error(e.getMessage(), e);
-							}
+										});
+							log.error(e.getMessage(), e);
 						}
 						Display.getDefault().syncExec(new Runnable() {
 							@Override

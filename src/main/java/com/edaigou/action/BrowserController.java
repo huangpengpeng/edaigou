@@ -318,18 +318,6 @@ public class BrowserController {
 						nextListener.handleEvent(arg0);
 					}
 				});
-				// 如果是详情页
-				if (browserButtonOfDetailPageSelect) {
-					Map<?, ?> map = (Map<?, ?>) page.getList().get(0);
-					Double shopSalePrice = map.get("shopSalePrice") == null ? 0D
-							: Double.valueOf(map.get("shopSalePrice")
-									.toString());
-					Double realSalesPrice = Double.valueOf(map.get(
-							"realSalesPrice").toString());
-//					if (shopSalePrice.equals(realSalesPrice)) {
-//						continue;
-//					}
-				}
 				try {
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {
@@ -516,12 +504,33 @@ public class BrowserController {
 	}
 
 	private void adjustUpPage() throws MalformedURLException {
+		Long[] ids = ArrayUtils.EMPTY_LONG_OBJECT_ARRAY;
+		List<ItemErrors> errors = itemErrorsMng
+				.getByErrorType(browserComboOfItemErrors.getText());
+		for (ItemErrors itemErrors : errors) {
+			ids = (Long[]) ArrayUtils.add(ids, itemErrors.getItemId());
+		}
+		if (!StringUtils.isBlank(browserComboOfItemErrors.getText())) {
+			ids = (Long[]) ArrayUtils.add(ids, 0L);
+		}
+
 		Long shopId = (Long) browserComboOfShop.getData(browserComboOfShop
 				.getSelectionIndex() + "");
 		String status = browserComboOfStatus.getText();
 
-		page = itemMng.getPageOfMap(null, shopId, null, status,
-				page.getPageSize(), 1,
+		int pageNo = 1;
+		if (page != null) {
+			if (browserCheckButtonOfItemExists.getSelection()) {
+				pageNo = page.getPageNo();
+			} else if (StringUtils.isNotBlank(browserComboOfItemErrors
+					.getText()) && !browserButtonOfEditPrice.getSelection()) {
+				pageNo = page.getPageNo();
+			} else {
+				pageNo = page.getPrePage();
+			}
+		}
+
+		page = itemMng.getPageOfMap(ids, shopId, null, status, pageNo, 1,
 				browserCheckButtonOfItemExists.getSelection());
 
 		if (page.isLastPage()) {
@@ -552,9 +561,11 @@ public class BrowserController {
 		}
 
 		if (browserButtonOfEditPrice.getSelection()) {
-			String js_exe = "document.getElementById('J_SearchTitle').value='"
-					+ itemGroupForm.getTitle().getText() + "';";
-			js_exe += "document.getElementById('J_SearchBtn').click();";
+			String js_exe = "$('#J_SearchTitle').focus();";
+			js_exe += "$('#J_SearchTitle').val('"
+					+ itemGroupForm.getTitle().getText() + "');";
+			js_exe += "$('#J_SearchTitle').blur();";
+			js_exe += "$('.float-tips').remove();$('#J_SearchBtn').click();";
 			browser.execute(js_exe);
 		}
 
