@@ -155,16 +155,18 @@ public class ItemListingController {
 							Appliance appliance = applianceMng
 									.getByNickOfOne(map.get("nick").toString());
 
-							try{
-							new TaobaoItemMngImpl().delisting(
-									appliance.getAppKey(),
-									appliance.getAppSecret(),
-									(Long) map.get("sNumIid"),
-									appliance.getSessionKey());
-							}catch(Exception e){
-								MessageBox messageBox = new MessageBox(tableOfListing
-										.getShell(), SWT.OK | SWT.CANCEL);
-								messageBox.setMessage("淘宝店铺商品下架错误，Msg:"+e.getMessage()+" 是否还执行系统下架？");
+							try {
+								new TaobaoItemMngImpl().delisting(
+										appliance.getAppKey(),
+										appliance.getAppSecret(),
+										(Long) map.get("sNumIid"),
+										appliance.getSessionKey());
+							} catch (Exception e) {
+								MessageBox messageBox = new MessageBox(
+										tableOfListing.getShell(), SWT.OK
+												| SWT.CANCEL);
+								messageBox.setMessage("淘宝店铺商品下架错误，Msg:"
+										+ e.getMessage() + " 是否还执行系统下架？");
 								if (messageBox.open() != SWT.OK) {
 									return;
 								}
@@ -188,7 +190,8 @@ public class ItemListingController {
 					public void handleEvent(Event arg0) {
 						try {
 							Map map = (Map) arg0.widget.getData();
-							manager.edit((Long)map.get("id"), ItemStatus.创建.toString());
+							manager.edit((Long) map.get("id"),
+									ItemStatus.创建.toString());
 							init(page.getPageNo());
 						} catch (Exception e) {
 							MessageText.error(e.getMessage());
@@ -197,8 +200,10 @@ public class ItemListingController {
 					}
 				});
 				createButton.setText("创建");
-				TableUtils.addButton(tableItem, 13, delistingButton, SWT.LEFT, 45);
-				TableUtils.addButton(tableItem, 13, createButton, SWT.RIGHT, 45);
+				TableUtils.addButton(tableItem, 13, delistingButton, SWT.LEFT,
+						45);
+				TableUtils
+						.addButton(tableItem, 13, createButton, SWT.RIGHT, 45);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
