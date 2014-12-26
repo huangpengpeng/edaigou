@@ -50,6 +50,7 @@ public class ItemListingController {
 	private Table tableOfListing;
 	private PageForm pageForm;
 	private ItemGroupForm itemGroupForm;
+	private Button buttonOfAuto;
 
 	public Pagination page;
 
@@ -297,6 +298,13 @@ public class ItemListingController {
 	public void setItemGroupForm(ItemGroupForm itemGroupForm) {
 		this.itemGroupForm = itemGroupForm;
 	}
+
+
+	public void setButtonOfAuto(Button buttonOfAuto) {
+		this.buttonOfAuto = buttonOfAuto;
+	}
+
+
 
 	private Logger log = LoggerFactory.getLogger(ItemListingController.class);
 

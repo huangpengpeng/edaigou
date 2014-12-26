@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,9 @@ public class KutongItemController {
 
 	private Button buttonOfkutongitem;
 	private PageForm pageForm;
+	private Button buttonOfAuto;
 
-	public void addActionListenter(){
+	public void addActionListenter() {
 		buttonOfkutongitem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
@@ -53,24 +55,25 @@ public class KutongItemController {
 							@Override
 							public void run() {
 								buttonOfkutongitem.setEnabled(false);
+								isStop=false;
 							}
 						});
-						
+
 						final List<Item> items = manager.query(null, title,
 								shop.getId(), ItemStatus.上架.toString());
-						try {
-							for (int i = 0; i < items.size(); i++) {
-								final int j = i;
-								Display.getDefault().syncExec(new Runnable() {
-									@Override
-									public void run() {
-										buttonOfkutongitem.setText(j + "/"
-												+ items.size());
-									}
-								});
-								Appliance appliance = applianceMng
-										.getByNickOfOne(nick);
-								Item item = items.get(i);
+						for (int i = 0; i < items.size(); i++) {
+							final int j = i;
+							Display.getDefault().syncExec(new Runnable() {
+								@Override
+								public void run() {
+									buttonOfkutongitem.setText(j + "/"
+											+ items.size());
+								}
+							});
+							Appliance appliance = applianceMng
+									.getByNickOfOne(nick);
+							Item item = items.get(i);
+							try {
 								List<Sku> orgList = taoBaoItemSkuMng
 										.getByNumIid(appliance.getAppKey(),
 												appliance.getAppSecret(),
@@ -86,6 +89,7 @@ public class KutongItemController {
 									itemErrorsMng.add(item.getId(),
 											ItemErrors.ItemErrorsType.SKU变动
 													.toString());
+									continue;
 								}
 								for (Sku sku : orgList) {
 									Sku selfSku = JxPathUtils.get(
@@ -93,6 +97,12 @@ public class KutongItemController {
 											".[ properties='"
 													+ sku.getProperties()
 													+ "' ]");
+									if(selfSku==null){
+										itemErrorsMng.add(item.getId(),
+												ItemErrors.ItemErrorsType.SKU变动
+														.toString());
+										continue;
+									}
 									if (selfList == null) {
 										continue;
 									}
@@ -106,19 +116,33 @@ public class KutongItemController {
 											selfSku.getNumIid(),
 											selfSku.getSkuId(),
 											sku.getQuantity(),
-
 											appliance.getSessionKey());
 								}
+							} catch (final Exception e) {
+								Display.getDefault().syncExec(new Runnable() {
+									@Override
+									public void run() {
+										if (!buttonOfAuto.getSelection()) {
+											MessageBox messageBox = new MessageBox(
+													buttonOfkutongitem
+															.getShell(), SWT.OK
+															| SWT.CANCEL);
+											messageBox
+													.setMessage("是否结束? errors:"
+															+ e.getMessage());
+											if (messageBox.open() == SWT.OK) {
+												buttonOfkutongitem.setText("库存同步");
+												buttonOfkutongitem.setEnabled(true);
+												isStop=true;
+											}
+										}
+									}
+								});
+								if (isStop) {
+									return;
+								}
+								log.error(e.getMessage(), e);
 							}
-						} catch (final Exception e) {
-								Display.getDefault().syncExec(
-										new Runnable() {
-												@Override
-												public void run() {
-													MessageText.error(e.getMessage());
-												}
-										});
-							log.error(e.getMessage(), e);
 						}
 						Display.getDefault().syncExec(new Runnable() {
 							@Override
@@ -133,20 +157,27 @@ public class KutongItemController {
 		});
 	}
 	
+	private boolean isStop=false;
+
 	public void setButtonOfkutongitem(Button buttonOfkutongitem) {
 		this.buttonOfkutongitem = buttonOfkutongitem;
 	}
-	
+
 	public void setPageForm(PageForm pageForm) {
 		this.pageForm = pageForm;
+	}
+	
+
+	public void setButtonOfAuto(Button buttonOfAuto) {
+		this.buttonOfAuto = buttonOfAuto;
 	}
 
 
 
 	private Logger log = LoggerFactory.getLogger(KutongItemController.class);
-	
-	private TaoBaoItemSkuMng taoBaoItemSkuMng=new TaoBaoItemSkuMngImpl();
-	
+
+	private TaoBaoItemSkuMng taoBaoItemSkuMng = new TaoBaoItemSkuMngImpl();
+
 	@Autowired
 	private ApplianceMng applianceMng;
 	@Autowired

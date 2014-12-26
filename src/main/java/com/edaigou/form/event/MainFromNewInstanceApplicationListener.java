@@ -228,6 +228,7 @@ public class MainFromNewInstanceApplicationListener implements
 		KutongItemController kutongItemController=applicationContextEvent.getBean(KutongItemController.class);
 		kutongItemController.setButtonOfkutongitem((Button)FormUtils.get("buttonOfkutongitem", form));
 		kutongItemController.setPageForm((PageForm)FormUtils.get("pageForm", form));
+		kutongItemController.setButtonOfAuto((Button)FormUtils.get("buttonOfAuto", form));
 		kutongItemController.addActionListenter();
 		
 		

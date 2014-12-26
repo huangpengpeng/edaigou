@@ -86,6 +86,7 @@ public class MainForm {
 	private 		CTabItem tabItemOfTitleError;
 	private Composite compositeOfTitleError;
 	private Table tableOfTitleErrors;
+	private Button buttonOfAuto;
 
 	/**
 	 * Launch the application.
@@ -314,6 +315,10 @@ public class MainForm {
 		buttonOfkutongitem = new Button(compositeOfListing, SWT.NONE);
 		buttonOfkutongitem.setBounds(245, 7, 60, 22);
 		buttonOfkutongitem.setText("同步库存");
+		
+		buttonOfAuto = new Button(compositeOfListing, SWT.CHECK);
+		buttonOfAuto.setText("自动");
+		buttonOfAuto.setBounds(320, 10, 46, 16);
 		
 		ctabItemOfdelisting = new CTabItem(tabFolder, SWT.NONE);
 		ctabItemOfdelisting.setText("已下架");
