@@ -34,7 +34,8 @@ public class BaseItem extends BaseEntity {
 		this.setpType(pType);
 	}
 	
-	
+	@Column(length=2000)
+	private String propertyAlias;
 
 	/**
 	 * 商品标题
@@ -219,4 +220,13 @@ public class BaseItem extends BaseEntity {
 	public void setpType(String pType) {
 		this.pType = pType;
 	}
+
+	public String getPropertyAlias() {
+		return propertyAlias;
+	}
+
+	public void setPropertyAlias(String propertyAlias) {
+		this.propertyAlias = propertyAlias;
+	}
+	
 }

@@ -163,6 +163,7 @@ public class MainFromNewInstanceApplicationListener implements
 				.getBean(ItemListingJkController.class);
 		itemListingJkController.setButtonOfListingJk((Button) FormUtils.get(
 				"buttonOfListingJk", form));
+		itemListingJkController.setButtonOfAuto((Button)FormUtils.get("buttonOfAuto", form));
 		itemListingJkController.setPageForm((PageForm) FormUtils.get(
 				"pageForm", form));
 

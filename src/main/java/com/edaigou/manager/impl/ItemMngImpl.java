@@ -245,6 +245,11 @@ public class ItemMngImpl implements ItemMng {
 	public List<Item> getBySNumIid(Long sNumIid) {
 		return dao.getBySNumIid(sNumIid);
 	}
+	
+	@Override
+	public void editPropertyAlias(Long id, String propertyAlias) {
+		dao.editPropertyAlias(id, propertyAlias);
+	}
 
 	@Autowired
 	private ItemFiltersMng itemFiltersMng;

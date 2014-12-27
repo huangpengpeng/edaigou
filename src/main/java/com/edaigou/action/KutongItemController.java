@@ -55,13 +55,13 @@ public class KutongItemController {
 							@Override
 							public void run() {
 								buttonOfkutongitem.setEnabled(false);
-								isStop=false;
 							}
 						});
 
 						final List<Item> items = manager.query(null, title,
 								shop.getId(), ItemStatus.上架.toString());
 						for (int i = 0; i < items.size(); i++) {
+							isStop = false;
 							final int j = i;
 							Display.getDefault().syncExec(new Runnable() {
 								@Override
@@ -97,7 +97,7 @@ public class KutongItemController {
 											".[ properties='"
 													+ sku.getProperties()
 													+ "' ]");
-									if(selfSku==null){
+									if (selfSku == null) {
 										itemErrorsMng.add(item.getId(),
 												ItemErrors.ItemErrorsType.SKU变动
 														.toString());
@@ -131,9 +131,11 @@ public class KutongItemController {
 													.setMessage("是否结束? errors:"
 															+ e.getMessage());
 											if (messageBox.open() == SWT.OK) {
-												buttonOfkutongitem.setText("库存同步");
-												buttonOfkutongitem.setEnabled(true);
-												isStop=true;
+												buttonOfkutongitem
+														.setText("库存同步");
+												buttonOfkutongitem
+														.setEnabled(true);
+												isStop = true;
 											}
 										}
 									}

@@ -173,4 +173,14 @@ public class ItemDaoImpl extends JdbcTemplateBaseDao implements ItemDao {
 		return super.queryForObject(id);
 	}
 
+	@Override
+	public void editPropertyAlias(Long id, String propertyAlias) {
+		SqlBuilder sqlBuilder = new SqlBuilder(
+				"update Item set gmtModify=current_timestamp()");
+		if(propertyAlias!=null){
+			sqlBuilder.set("propertyAlias", propertyAlias);
+		}
+		update(id, sqlBuilder);
+	}
+
 }

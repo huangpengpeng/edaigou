@@ -25,6 +25,7 @@ import com.edaigou.entity.Appliance;
 import com.edaigou.entity.Item.ItemStatus;
 import com.edaigou.entity.ItemErrors;
 import com.edaigou.entity.ItemErrors.ItemErrorsType;
+import com.edaigou.entity.PromotionItem;
 import com.edaigou.form.MessageText;
 import com.edaigou.form.widgets.ItemGroupForm;
 import com.edaigou.form.widgets.TableUtils;
@@ -148,6 +149,7 @@ public class ItemTitleErrorsController {
 							Appliance appliance = applianceMng
 									.getByNickOfOne(map.get("nick").toString());
 
+							Long id = (Long) map.get("id");
 							Long pNumIid = (Long) map.get("pNumIid");
 							Long sNUmIid = (Long) map.get("sNumIid");
 
@@ -155,11 +157,33 @@ public class ItemTitleErrorsController {
 								Item item = new TaobaoItemMngImpl()
 										.get(pNumIid);
 
+								PromotionItem pItem = promotionItemMng.get(id);
+								com.edaigou.entity.Item eItem = manager.get(id);
+
 								new TaobaoItemMngImpl().updateDesc(
 										appliance.getAppKey(),
 										appliance.getAppSecret(), sNUmIid,
 										item.getTitle(), null,
 										appliance.getSessionKey());
+
+								manager.edit(id, eItem.getpNumIid(),
+										item.getTitle(), eItem.getImageByte(),
+										pItem.getImageUrl(),
+										eItem.getRealSalesPrice(),
+										eItem.getRealSaleDiscount(),
+										pItem.getOriginalPrice(),
+										pItem.getSalePrice(),
+										pItem.getCommissionMoney(),
+										pItem.getCommissionRate(),
+										pItem.getSubsidyRate(),
+										pItem.getSubsidy(),
+										pItem.getSumCommissionRate(),
+										pItem.getSumCOmmissionMoney(),
+										eItem.getShopId(), pItem.getUrl(),
+										eItem.getsNumIid(),
+										eItem.getMinPrice(),
+										eItem.getShopSalePrice(),
+										eItem.getDetail(), eItem.getpType());
 							} catch (Exception e) {
 								MessageText.error(e.getMessage());
 								return;

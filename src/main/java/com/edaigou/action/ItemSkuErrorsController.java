@@ -12,6 +12,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -36,9 +37,11 @@ import com.edaigou.manager.PromotionItemMng;
 import com.edaigou.manager.ShopMng;
 import com.edaigou.resource.ImageUtils;
 import com.edaigou.service.TaobaoItemSvc;
+import com.taobao.api.domain.Item;
 import com.taobao.api.domain.Sku;
 import com.taobao.biz.manager.TaoBaoItemSkuMng;
 import com.taobao.biz.manager.impl.TaoBaoItemSkuMngImpl;
+import com.taobao.biz.manager.impl.TaobaoItemMngImpl;
 
 @Controller
 public class ItemSkuErrorsController {
@@ -158,8 +161,18 @@ public class ItemSkuErrorsController {
 									appliance.getAppKey(),
 									appliance.getAppSecret(), sNUmIid);
 
-							try {
+							Item item = new TaobaoItemMngImpl().get(pNumIid);
 
+							new TaobaoItemMngImpl().updatePropertyAlias(
+									appliance.getAppKey(),
+									appliance.getAppSecret(), sNUmIid,
+									item.getPropertyAlias(),
+									appliance.getSessionKey());
+
+							manager.editPropertyAlias((Long) map.get("id"),
+									item.getPropertyAlias());
+
+							try {
 								for (Sku sku : orgList) {
 									Sku selfSku = JxPathUtils.get(
 											selfList,
@@ -171,7 +184,8 @@ public class ItemSkuErrorsController {
 												appliance.getAppKey(),
 												appliance.getAppSecret(),
 												sNUmIid, sku.getProperties(),
-												null, sku.getQuantity(),
+												sku.getPropertiesName(),
+												sku.getQuantity(),
 												Double.valueOf(sku.getPrice()),
 												sku.getOuterId(), null, null,
 												null, null, null, null,
@@ -193,8 +207,15 @@ public class ItemSkuErrorsController {
 									}
 								}
 							} catch (Exception e) {
-								MessageText.error(e.getMessage());
-								return;
+								MessageBox messageBox = new MessageBox(
+										tableOfSkuErrors.getShell(), SWT.OK
+												| SWT.CANCEL);
+								messageBox.setMessage("是否结束? errors:"
+										+ e.getMessage());
+								if (messageBox.open() == SWT.OK) {
+									return;
+								}
+
 							}
 
 							ItemErrors itemErrors = itemErrorsMng

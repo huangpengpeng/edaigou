@@ -69,4 +69,6 @@ public interface ItemMng {
 	List<Item> getByStatus(String status);
 	
 	Item get(Long id);
+	
+	void editPropertyAlias(Long id ,String propertyAlias);
 }

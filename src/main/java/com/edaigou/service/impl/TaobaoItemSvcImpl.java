@@ -43,6 +43,7 @@ public class TaobaoItemSvcImpl implements TaobaoItemSvc {
 		com.taobao.api.domain.Item item = detail.getItem();
 
 		/***************** 商品基础数据 ************************/
+		modelMap.put("item", item);
 		modelMap.put("title", item.getTitle());
 		modelMap.put("image", item.getPicUrl());
 		modelMap.put("numIid", item.getNumIid());

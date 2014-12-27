@@ -43,11 +43,12 @@
 			<artifactId>taobao-sdk-java-auto</artifactId>
 			<version>_1385613471586-20140511</version>
 		</dependency>
-	<dependency>
-		<groupId>com</groupId>
-<artifactId>taobao</artifactId>
-<version>2.2</version>
-		</dependency>
+		
+<!-- 	<dependency> -->
+<!-- 		<groupId>com</groupId> -->
+<!-- <artifactId>taobao</artifactId> -->
+<!-- <version>2.2</version> -->
+<!-- 		</dependency> -->
 		
 			<dependency>
 			<groupId>commons-jxpath</groupId>

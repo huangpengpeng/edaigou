@@ -31,4 +31,6 @@ public interface ItemDao {
 			String status) ;
 	
 	Item get(Long id);
+	
+	void editPropertyAlias(Long id ,String propertyAlias);
 }
