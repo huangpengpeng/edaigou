@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.common.util.JxPathUtils;
 import com.common.util.NumberUtils;
 import com.edaigou.entity.Item;
 import com.edaigou.entity.Item.ItemPType;
@@ -32,7 +31,6 @@ import com.edaigou.manager.ItemMng;
 import com.edaigou.manager.PromotionItemMng;
 import com.edaigou.manager.ShopMng;
 import com.edaigou.service.TaobaoItemSvc;
-import com.taobao.api.domain.ItemTemplate;
 import com.taobao.biz.manager.impl.TaobaoItemMngImpl;
 
 @Controller
@@ -173,17 +171,17 @@ public class ItemListingJkController {
 
 								String propertyAlias = item.getPropertyAlias();
 
-								if (propertyAlias == null) {
-									com.taobao.api.domain.Item selfItem = new TaobaoItemMngImpl()
-											.get(item.getsNumIid());
-									propertyAlias = selfItem.getPropertyAlias();
-								}
+//								if (propertyAlias == null) {
+//									com.taobao.api.domain.Item selfItem = new TaobaoItemMngImpl()
+//											.get(item.getsNumIid());
+//									propertyAlias = selfItem.getPropertyAlias();
+//								}
 
 								jktk(item, modemMap, promotionItem);
 
 								jktitle(item, modemMap, promotionItem);
 
-								jksku(item, propertyAlias, modemMap);
+//								jksku(item, propertyAlias, modemMap);
 							} catch (final Exception e) {
 								if ("此商品没有淘客".equals(e.getMessage())) {
 									itemErrorsMng.add(item.getId(),

@@ -30,7 +30,7 @@ public class MainForm {
 	private Group groupOfItem;
 	private Composite compositeOfItems;
 	
-	private Table table;
+	private Table table; 
 	private Button buttonOfShowSaveItem;
 	private CTabItem cTabItemItem;
 	private PageForm pageForm;

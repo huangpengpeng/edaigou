@@ -181,7 +181,7 @@ public class ItemTitleErrorsController {
 										pItem.getSumCOmmissionMoney(),
 										eItem.getShopId(), pItem.getUrl(),
 										eItem.getsNumIid(),
-										eItem.getMinPrice(),
+										eItem.getMinPrice().isInfinite()?0D:eItem.getMinPrice(),
 										eItem.getShopSalePrice(),
 										eItem.getDetail(), eItem.getpType());
 							} catch (Exception e) {
