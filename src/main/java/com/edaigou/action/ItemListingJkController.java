@@ -31,7 +31,6 @@ import com.edaigou.manager.ItemMng;
 import com.edaigou.manager.PromotionItemMng;
 import com.edaigou.manager.ShopMng;
 import com.edaigou.service.TaobaoItemSvc;
-import com.taobao.biz.manager.impl.TaobaoItemMngImpl;
 
 @Controller
 public class ItemListingJkController {
@@ -55,31 +54,19 @@ public class ItemListingJkController {
 				final Shop shop = shopMng.getByNick(nick);
 				new Thread(new Runnable() {
 					
-					protected void jksku(Item item, String propertyAlias,
-							Map<String, Object> modemMap) {
-						com.taobao.api.domain.Item tItem = (com.taobao.api.domain.Item) modemMap
-								.get("item");
-						if (propertyAlias.length() != tItem.getPropertyAlias()
-								.length()) {
+
+					protected void jkorgprice(Item item,
+							Map<String, Object> modemMap,
+							PromotionItem promotionItem) {
+						if (!NumberUtils.equals(
+								promotionItem.getOriginalPrice(),
+								NumberUtils.toDouble(modemMap.get(
+										"originalPrice").toString()))) {
 							itemErrorsMng.add(item.getId(),
-									ItemErrorsType.SKU变动.toString());
-							System.out.println("s:" + propertyAlias);
-							System.out.println("v:" + tItem.getPropertyAlias());
-							return;
-						}
-						String[] pas = propertyAlias.split(";");
-						for (String v : pas) {
-							if (!StringUtils.contains(tItem.getPropertyAlias(),
-									v)) {
-								itemErrorsMng.add(item.getId(),
-										ItemErrorsType.SKU变动.toString());
-								System.out.println("s:" + propertyAlias);
-								System.out.println("v:" + tItem.getPropertyAlias());
-								return;
-							}
+									ItemErrorsType.原价变动.toString());
 						}
 					}
-
+					
 					protected void jktitle(Item item,
 							Map<String, Object> modemMap,
 							PromotionItem promotionItem) {
@@ -169,19 +156,11 @@ public class ItemListingJkController {
 								modemMap = taobaoItemSvc
 										.getAitaobaoItem(promotionItem.getUrl());
 
-								String propertyAlias = item.getPropertyAlias();
-
-//								if (propertyAlias == null) {
-//									com.taobao.api.domain.Item selfItem = new TaobaoItemMngImpl()
-//											.get(item.getsNumIid());
-//									propertyAlias = selfItem.getPropertyAlias();
-//								}
-
 								jktk(item, modemMap, promotionItem);
 
 								jktitle(item, modemMap, promotionItem);
-
-//								jksku(item, propertyAlias, modemMap);
+								
+								jkorgprice(item, modemMap, promotionItem);
 							} catch (final Exception e) {
 								if ("此商品没有淘客".equals(e.getMessage())) {
 									itemErrorsMng.add(item.getId(),

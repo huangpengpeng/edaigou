@@ -173,7 +173,7 @@ public class ItemController {
 					public void handleEvent(Event arg0) {
 						Map map = (Map) arg0.widget.getData();
 						if (map.get("sNumIid") != null
-								|| StringUtils.isNotBlank(map.get("sNumIid")
+								&& StringUtils.isNotBlank(map.get("sNumIid")
 										.toString())) {
 							try{
 							Appliance appliance = applianceMng

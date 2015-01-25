@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.edaigou.entity.Item.ItemPType;
+import com.edaigou.entity.ItemErrors.ItemErrorsType;
 import com.edaigou.form.MainForm;
 import com.edaigou.resource.ImageUtils;
 

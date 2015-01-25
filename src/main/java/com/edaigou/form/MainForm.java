@@ -261,6 +261,7 @@ public class MainForm {
 		browserComboOfItemErrors.add(ItemErrorsType.重复编号.toString());
 		browserComboOfItemErrors.add(ItemErrorsType.标题错误.toString());
 		browserComboOfItemErrors.add(ItemErrorsType.SKU变动.toString());
+		browserComboOfItemErrors.add(ItemErrorsType.原价变动.toString());
 
 		ctabItemOfFilters = new CTabItem(tabFolder, SWT.NONE);
 		ctabItemOfFilters.setText("商品过滤");
